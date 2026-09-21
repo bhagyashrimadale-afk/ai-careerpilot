@@ -227,18 +227,30 @@ export default function DsaTracker() {
                 />
               </div>
 
-              {/* Execution Test Result Banner */}
+              {/* Execution Test Result Banner Console */}
               {result && (
-                <div className={`p-4 rounded-2xl border text-xs font-bold flex items-center justify-between animate-fadeIn ${
+                <div className={`p-5 rounded-2xl border text-xs font-mono space-y-2 animate-fadeIn ${
                   result.status === 'Solved'
-                    ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400'
-                    : 'bg-amber-500/10 border-amber-500/40 text-amber-400'
+                    ? 'bg-slate-950 border-emerald-500/50 text-emerald-400'
+                    : 'bg-slate-950 border-amber-500/50 text-amber-400'
                 }`}>
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-5 h-5 shrink-0" />
-                    <span>Test Suite Status: {result.status} (Accuracy Score: {result.score}/100)</span>
+                  <div className="flex items-center justify-between font-sans border-b border-slate-800 pb-2">
+                    <div className="flex items-center space-x-2 font-bold">
+                      <CheckCircle2 className="w-5 h-5 shrink-0" />
+                      <span>Status: {result.status} ({result.score}/100 Score)</span>
+                    </div>
+                    {result.execution_time_ms !== undefined && (
+                      <span className="text-[11px] text-slate-400 font-mono">
+                        Execution: {result.execution_time_ms}ms • {result.test_cases_passed}
+                      </span>
+                    )}
                   </div>
-                  <span className="text-[11px] opacity-80 font-mono">Stats updated in header!</span>
+                  {result.output_preview && (
+                    <div className="pt-1 text-[11px] text-slate-300">
+                      <span className="text-slate-500 block text-[10px] uppercase font-sans">Execution Output Console:</span>
+                      <code>{result.output_preview}</code>
+                    </div>
+                  )}
                 </div>
               )}
             </>
