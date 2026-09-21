@@ -13,6 +13,8 @@ class Config:
     if MYSQL_URL:
         if MYSQL_URL.startswith("mysql://"):
             MYSQL_URL = MYSQL_URL.replace("mysql://", "mysql+pymysql://", 1)
+        elif MYSQL_URL.startswith("postgres://"):
+            MYSQL_URL = MYSQL_URL.replace("postgres://", "postgresql://", 1)
         SQLALCHEMY_DATABASE_URI = MYSQL_URL
     else:
         # SQLite fallback for effortless local run out-of-the-box

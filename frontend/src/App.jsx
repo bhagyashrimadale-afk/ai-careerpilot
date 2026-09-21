@@ -23,12 +23,13 @@ function Layout() {
 
   if (!isAuthenticated) {
     return (
-<Routes>
-  <Route path="/" element={<Landing />} />
-  <Route path="/login" element={<Login />} />
-  <Route path="/register" element={<Register />} />
-  <Route path="*" element={<Navigate to="/" replace />} />
-</Routes>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/landing" element={<Landing />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     );
   }
 

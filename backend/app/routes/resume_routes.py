@@ -14,12 +14,23 @@ def analyze_resume():
     if not profile:
         return jsonify({'error': 'Profile not found. Please create profile first.'}), 404
         
-    data = request.get_json() or {}
-    resume_text = data.get('resume_text', '').strip() or profile.resume_text
+    data = request.get_json(silent=True) or request.get_json(force=True) or {}
+    resume_text = data.get('resume_text', '').strip()
     target_role = data.get('target_role', '').strip() or profile.target_role or 'Full Stack Developer'
 
+    # Check for file upload if request is multipart/form-data
+    if 'resume_file' in request.files:
+        file = request.files['resume_file']
+        if file and file.filename:
+            content = file.read().decode('utf-8', errors='ignore')
+            if content.strip():
+                resume_text = content.strip()
+
+    if not resume_text and profile.resume_text:
+        resume_text = profile.resume_text
+
     if not resume_text:
-        return jsonify({'error': 'Resume text is required for analysis.'}), 400
+        return jsonify({'error': 'Please provide resume text or upload a valid resume file for ATS analysis.'}), 400
 
     # Trigger AI analysis
     analysis_result = AIService.analyze_resume_ats(resume_text, target_role)

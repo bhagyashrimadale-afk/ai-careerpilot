@@ -10,8 +10,8 @@ app = create_app()
 
 def seed_database():
     with app.app_context():
-        print("Clearing database tables...")
-        db.drop_all()
+        print("Creating database tables...")
+        
         db.create_all()
 
         print("Seeding Users...")

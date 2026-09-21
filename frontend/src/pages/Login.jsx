@@ -23,7 +23,11 @@ export default function Login() {
       login(res.data.user, res.data.access_token);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to login. Check credentials.');
+      if (!err.response) {
+        setError('Network error connecting to cloud server. If using Render free backend, please wait ~30s for the server to wake up and try again.');
+      } else {
+        setError(err.response?.data?.error || 'Failed to login. Please check your credentials.');
+      }
     } finally {
       setLoading(false);
     }
