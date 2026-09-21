@@ -8,14 +8,24 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Initialize extensions
+    # Initialize extensions & global CORS for mobile and web access
     db.init_app(app)
-    CORS(app, resources={r"/api/*": {
+    CORS(app, resources={r"/*": {
         "origins": "*",
-        "allow_headers": ["Content-Type", "Authorization"],
+        "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Origin", "Accept"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    }})
+    }}, supports_credentials=True)
     jwt = JWTManager(app)
+
+    @app.before_request
+    def handle_preflight():
+        from flask import request
+        if request.method == "OPTIONS":
+            response = app.make_default_options_response()
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            response.headers.add("Access-Control-Allow-Headers", "*")
+            response.headers.add("Access-Control-Allow-Methods", "*")
+            return response
 
     # Register blueprints
     from app.routes.auth_routes import auth_bp
